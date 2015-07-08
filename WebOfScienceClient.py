@@ -62,4 +62,7 @@ class WebOfScienceClient(object):
             return None
 
     def _get_session_header(self):
-        return {"Cookie": "SID=\"" + str(self.session_id) + "\""}
+        if self.is_authenticated():
+            return {"Cookie": "SID=\"" + str(self.session_id) + "\""}
+        else:
+            return None
