@@ -95,11 +95,21 @@ class WebOfScienceClient(object):
             if authors:
                 r.update({"authors": authors})
 
+            for source in record.findall("source"):
+                r.update(WebOfScienceClient._process_node(source, "Published.BiblioYear"))
+                r.update(WebOfScienceClient._process_node(source, "Published.BiblioDate"))
+                r.update(WebOfScienceClient._process_node(source, "SourceTitle"))
+
             for other in record.findall("other"):
-                if other.find("label").text == "Identifier.Doi":
-                    r.update({"doi": other.find("value").text})
-                if other.find("label").text == "Identifier.Issn":
-                    r.update({"issn": other.find("value").text})
+                r.update(WebOfScienceClient._process_node(other, "Identifier.Doi"))
+                r.update(WebOfScienceClient._process_node(other, "Identifier.Issn"))
 
             d.get("records").append(r)
         return d
+
+    @staticmethod
+    def _process_node(node, label):
+        if node.find("label").text == label:
+            return {label: node.find("value").text}
+        else:
+            return {}
