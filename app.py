@@ -25,7 +25,8 @@ def main():
             if record is not None:
                 records.append(record)
 
-        print(json.dumps(records))
+    with open("out.json", "w") as out:
+        out.write(json.dumps(records))
 
 if __name__ == "__main__":
     main()

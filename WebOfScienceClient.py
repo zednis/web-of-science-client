@@ -78,12 +78,11 @@ class WebOfScienceClient(object):
     @staticmethod
     def _process_response(content):
         response = ET.fromstring(content)
-        _return = response.find(".//return")
+        record = response.find(".//return/records")
 
-        if _return is None:
+        if record is None:
             return None
 
-        record = _return.find(".//records/")
         r = {}
         r.update({"uid": record.find("uid").text})
         r.update({"title": record.find("title/value").text})
@@ -108,6 +107,11 @@ class WebOfScienceClient(object):
             keywords.append(keyword.text)
         if keywords:
             r.update({"keywords": keywords})
+
+        abstract = record.find(".//abstract")
+        if abstract is not None:
+            print("Found abstract!")
+            print(ET.tostring(abstract))
 
         return r
 
