@@ -13,7 +13,7 @@ def load_csv(file, delimiter=',', quotechar='"'):
     return data
 
 def main():
-    data = load_csv("resources/dco-dois.csv")
+    data = load_csv("dco-dois.csv")
     data.pop(0)
 
     client = WebOfScienceClient()
@@ -22,7 +22,7 @@ def main():
 
     query = "DO="+data[5][2]
     record = client.user_query(query)
-    ET.dump(record)
+    ET.dump(ET.fromstring(record))
 
     client.close_session()
     print("authenticated:", client.is_authenticated())
