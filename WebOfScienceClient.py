@@ -23,8 +23,8 @@ class WebOfScienceClient(object):
         tree = ET.parse("resources/authenticate.xml")
         payload = ET.tostring(tree.getroot())
         r = requests.post("http://search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate", data=payload)
-        auth_response = ET.fromstring(r.content)
-        _return = auth_response.find(".//return")
+        response = ET.fromstring(r.content)
+        _return = response.find(".//return")
         if _return is not None:
             self.session_id = _return.text
             return True
@@ -42,7 +42,7 @@ class WebOfScienceClient(object):
         payload = ET.tostring(tree.getroot())
         r = requests.post("http://search.webofknowledge.com/esti/wokmws/ws/WokSearchLite", headers=headers,
                           data=payload)
-        return ET.fromstring(r.content)
+        return r.content
 
     def close_session(self):
         if not self.is_authenticated():
