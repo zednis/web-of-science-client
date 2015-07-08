@@ -1,0 +1,7 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:auth="http://auth.cxf.wokmws.thomsonreuters.com">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <auth:authenticate/>
+  </soapenv:Body>
+</soapenv:Envelope>

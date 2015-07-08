@@ -1,0 +1,21 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:woksearchlite="http://woksearchlite.v3.wokmws.thomsonreuters.com">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <woksearchlite:search>
+            <queryParameters>
+                <databaseId>WOS</databaseId>
+                <userQuery>DO=10.1016/j.orggeochem.2013.03.001</userQuery>
+                <editions>
+                    <collection>WOS</collection>
+                    <edition>SCI</edition>
+                </editions>
+                <queryLanguage>en</queryLanguage>
+            </queryParameters>
+            <retrieveParameters>
+                <firstRecord>1</firstRecord>
+                <count>5</count>
+            </retrieveParameters>
+        </woksearchlite:search>
+    </soapenv:Body>
+</soapenv:Envelope>
