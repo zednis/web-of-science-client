@@ -7,7 +7,6 @@ ET.register_namespace("soapenv", "http://schemas.xmlsoap.org/soap/envelope/")
 ET.register_namespace("woksearchlite", "http://woksearchlite.v3.wokmws.thomsonreuters.com")
 ET.register_namespace("auth", "http://auth.cxf.wokmws.thomsonreuters.com")
 
-
 class WebOfScienceClient(object):
 
     def __init__(self):
@@ -66,3 +65,10 @@ class WebOfScienceClient(object):
             return {"Cookie": "SID=\"" + str(self.session_id) + "\""}
         else:
             return None
+
+    def __enter__(self):
+        self.authenticate()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close_session()
