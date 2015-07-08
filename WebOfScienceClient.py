@@ -104,6 +104,12 @@ class WebOfScienceClient(object):
                 r.update(WebOfScienceClient._process_node(other, "Identifier.Doi"))
                 r.update(WebOfScienceClient._process_node(other, "Identifier.Issn"))
 
+            keywords = []
+            for keyword in record.findall("keywords/value"):
+                keywords.append(keyword.text)
+            if keywords:
+                r.update({"keywords": keywords})
+
             d.get("records").append(r)
         return d
 
