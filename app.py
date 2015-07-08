@@ -1,7 +1,7 @@
 __author__ = 'szednik'
 
 import csv
-import xml.etree.ElementTree as ET
+import json
 from WebOfScienceClient import WebOfScienceClient
 
 def load_csv(file, delimiter=',', quotechar='"'):
@@ -16,16 +16,10 @@ def main():
     data = load_csv("dco-dois.csv")
     data.pop(0)
 
-    client = WebOfScienceClient()
-    client.authenticate()
-    print("authenticated:", client.is_authenticated())
-
-    query = "DO="+data[5][2]
-    record = client.user_query(query)
-    ET.dump(ET.fromstring(record))
-
-    client.close_session()
-    print("authenticated:", client.is_authenticated())
+    with WebOfScienceClient() as client:
+        query = "DO="+data[0][2]
+        records = client.user_query(query)
+        print(json.dumps(records))
 
 if __name__ == "__main__":
     main()
