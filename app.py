@@ -16,9 +16,15 @@ def main():
     data = load_csv("dco-dois.csv")
     data.pop(0)
 
+    records = []
     with WebOfScienceClient() as client:
-        query = "DO="+data[0][2]
-        records = client.user_query(query)
+
+        for (uri, title, doi) in data:
+            query = "DO="+doi
+            record = client.user_query(query)
+            if record is not None:
+                records.append(record)
+
         print(json.dumps(records))
 
 if __name__ == "__main__":

@@ -83,35 +83,33 @@ class WebOfScienceClient(object):
         if _return is None:
             return None
 
-        d = {"records": []}
-        for record in _return.findall(".//records/"):
-            r = {}
-            r.update({"uid": record.find("uid").text})
-            r.update({"title": record.find("title/value").text})
+        record = _return.find(".//records/")
+        r = {}
+        r.update({"uid": record.find("uid").text})
+        r.update({"title": record.find("title/value").text})
 
-            authors = []
-            for author in record.findall("authors/value"):
-                authors.append(author.text)
-            if authors:
-                r.update({"authors": authors})
+        authors = []
+        for author in record.findall("authors/value"):
+            authors.append(author.text)
+        if authors:
+            r.update({"authors": authors})
 
-            for source in record.findall("source"):
-                r.update(WebOfScienceClient._process_node(source, "Published.BiblioYear"))
-                r.update(WebOfScienceClient._process_node(source, "Published.BiblioDate"))
-                r.update(WebOfScienceClient._process_node(source, "SourceTitle"))
+        for source in record.findall("source"):
+            r.update(WebOfScienceClient._process_node(source, "Published.BiblioYear"))
+            r.update(WebOfScienceClient._process_node(source, "Published.BiblioDate"))
+            r.update(WebOfScienceClient._process_node(source, "SourceTitle"))
 
-            for other in record.findall("other"):
-                r.update(WebOfScienceClient._process_node(other, "Identifier.Doi"))
-                r.update(WebOfScienceClient._process_node(other, "Identifier.Issn"))
+        for other in record.findall("other"):
+            r.update(WebOfScienceClient._process_node(other, "Identifier.Doi"))
+            r.update(WebOfScienceClient._process_node(other, "Identifier.Issn"))
 
-            keywords = []
-            for keyword in record.findall("keywords/value"):
-                keywords.append(keyword.text)
-            if keywords:
-                r.update({"keywords": keywords})
+        keywords = []
+        for keyword in record.findall("keywords/value"):
+            keywords.append(keyword.text)
+        if keywords:
+            r.update({"keywords": keywords})
 
-            d.get("records").append(r)
-        return d
+        return r
 
     @staticmethod
     def _process_node(node, label):
