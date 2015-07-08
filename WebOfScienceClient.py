@@ -58,6 +58,7 @@ class WebOfScienceClient(object):
         if fault is not None:
             return fault.text
         else:
+            self.session_id = None
             return None
 
     def _get_session_header(self):
