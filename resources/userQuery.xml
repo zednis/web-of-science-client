@@ -5,7 +5,7 @@
         <woksearchlite:search>
             <queryParameters>
                 <databaseId>WOS</databaseId>
-                <userQuery>DO=10.1016/j.orggeochem.2013.03.001</userQuery>
+                <userQuery>query</userQuery>
                 <editions>
                     <collection>WOS</collection>
                     <edition>SCI</edition>
