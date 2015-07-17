@@ -9,8 +9,8 @@ ns = {
     "auth": "http://auth.cxf.wokmws.thomsonreuters.com"
 }
 
-class WebOfScienceClient(object):
 
+class WebOfScienceClient(object):
     def __init__(self):
         self.session_id = None
 
@@ -31,6 +31,17 @@ class WebOfScienceClient(object):
             return True
         else:
             return False
+
+    def get_keywords_by_doi(self, doi):
+        pub = self.user_query_by_doi(doi)
+        if "keywords" in pub:
+            return pub["keywords"]
+        else:
+            return []
+
+    def user_query_by_doi(self, doi):
+        query = "DO="+doi
+        return self.user_query(query)
 
     def user_query(self, query):
         if not self.is_authenticated():
@@ -112,6 +123,10 @@ class WebOfScienceClient(object):
         if abstract is not None:
             print("Found abstract!")
             print(ET.tostring(abstract))
+
+        for label in record.findall(".//label"):
+            if str(label.text).lower() == "abstract":
+                print("Found abstract!")
 
         return r
 
