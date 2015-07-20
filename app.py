@@ -87,7 +87,10 @@ def main():
 
     with WebOfScienceClient() as web_of_science:
         for (uri, title, doi) in data:
-            keywords = {web_of_science.get_keywords_by_doi(doi), crossref.get_keywords(doi)}
+            keywords = set()
+            keywords |= set(web_of_science.get_keywords_by_doi(doi))
+            keywords |= set(crossref.get_keywords(doi))
+            keywords = set([keyword.lower() for keyword in keywords])
             for keyword in keywords:
                 process_keyword(uri=uri, keyword=keyword)
 

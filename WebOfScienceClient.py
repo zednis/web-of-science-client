@@ -34,7 +34,7 @@ class WebOfScienceClient(object):
 
     def get_keywords_by_doi(self, doi):
         pub = self.user_query_by_doi(doi)
-        if "keywords" in pub:
+        if pub is not None and "keywords" in pub:
             return pub["keywords"]
         else:
             return []
