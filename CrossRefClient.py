@@ -9,17 +9,87 @@ class CrossRefClient(object):
     def __init__(self):
         super().__init__()
 
-    def resolve_doi(self, doi):
+    def get_publication(self, doi):
+        data = self._resolve_doi(doi)
+        return Publication(data) if data is not None else None
+
+    def _resolve_doi(self, doi):
         r = requests.get(self.crossref_api_url + doi)
-        return r.json() \
+        return r.json()["message"] \
             if r is not None \
                and r.status_code == 200 \
+               and "message" in r.json() \
             else None
 
-    def get_keywords(self, doi):
-        data = self.resolve_doi(doi)
-        return data["message"]["keywords"] \
-            if data is not None \
-               and "message" in data \
-               and "keywords" in data["message"] \
-            else []
+
+class Publication(object):
+    def __init__(self, data):
+        self._data = data
+
+        if data is not None:
+            self._keywords = data["keywords"] if "keywords" in data else []
+            self._pages = data["pages"] if "pages" in data else None
+            self._publisher = data["publisher"] if "publisher" in data else None
+            self._volume = data["volume"] if "volume" in data else None
+            self._type = data["type"] if "type" in data else None
+            self._doi = data["DOI"] if "DOI" in data else None
+            self._issn = data["ISSN"][0] if "ISSN" in data else None
+            self._subject = data["subject"] if "subject" in data else None
+            self._title = data["title"][0] if "title" in data else None
+            self._issued = data["issued"]["date-parts"] if "issued" in data else None
+            self._publication_venue = ["container-title"] if "container-title" in data else None
+            self._authors = None
+            self._reference_count = data["reference-count"] if "reference-count" in data else None
+
+    @property
+    def keywords(self):
+        return self._keywords
+
+    @property
+    def pages(self):
+        return self._pages
+
+    @property
+    def publisher(self):
+        return self._publisher
+
+    @property
+    def volume(self):
+        return self._volume
+
+    @property
+    def type(self):
+        return self._type
+
+    @property
+    def doi(self):
+        return self._doi
+
+    @property
+    def issn(self):
+        return self._issn
+
+    @property
+    def subject(self):
+        return self._subject
+
+    @property
+    def title(self):
+        return self._title
+
+    @property
+    def issued(self):
+        return self._issued
+
+    @property
+    def authors(self):
+        return self._authors
+
+    @property
+    def reference_count(self):
+        return self._reference_count
+
+    @property
+    def publication_venue(self):
+        return self._publication_venue
+

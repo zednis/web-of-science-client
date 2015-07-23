@@ -89,7 +89,7 @@ def main():
         for (uri, title, doi) in data:
             keywords = set()
             keywords |= set(web_of_science.get_keywords_by_doi(doi))
-            keywords |= set(crossref.get_keywords(doi))
+            keywords |= set(crossref.get_publication(doi).keywords)
             keywords = set([keyword.lower() for keyword in keywords])
             for keyword in keywords:
                 process_keyword(uri=uri, keyword=keyword)
