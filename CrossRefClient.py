@@ -33,13 +33,23 @@ class Publication(object):
             self._volume = data["volume"] if "volume" in data else None
             self._type = data["type"] if "type" in data else None
             self._doi = data["DOI"] if "DOI" in data else None
-            self._issn = data["ISSN"][0] if "ISSN" in data else None
-            self._subject = data["subject"] if "subject" in data else None
-            self._title = data["title"][0] if "title" in data else None
-            self._issued = data["issued"]["date-parts"] if "issued" in data else None
-            self._publication_venue = ["container-title"] if "container-title" in data else None
-            self._authors = None
+            self._issn = data["ISSN"][0] if "ISSN" in data and data["ISSN"] else None
+            self._subject = data["subject"] if "subject" in data else []
+            self._title = data["title"][0] if "title" in data and data["title"] else None
+            self._issued = Publication.get_date(data["issued"]["date-parts"][0]) if "issued" in data else None
+            self._publication_venue = data["container-title"] if "container-title" in data else None
+            self._authors = data["author"] if "author" in data and data["author"] else []
             self._reference_count = data["reference-count"] if "reference-count" in data else None
+            self._issue = data["issue"] if "issue" in data else None
+
+    @staticmethod
+    def get_date(d):
+        size = len(d)
+        return {
+            "year": d[0] if size > 0 else None,
+            "month": d[1] if size > 1 else None,
+            "day": d[2] if size > 2 else None
+        } if d else None
 
     @property
     def keywords(self):
@@ -93,3 +103,6 @@ class Publication(object):
     def publication_venue(self):
         return self._publication_venue
 
+    @property
+    def issue(self):
+        return self._issue
