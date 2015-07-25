@@ -6,9 +6,6 @@ import requests
 class CrossRefClient(object):
     crossref_api_url = "http://api.crossref.org/works/"
 
-    def __init__(self):
-        super().__init__()
-
     def get_publication(self, doi):
         data = self._resolve_doi(doi)
         return Publication(data) if data is not None else None
@@ -28,7 +25,7 @@ class Publication(object):
 
         if data is not None:
             self._keywords = data["keywords"] if "keywords" in data else []
-            self._pages = data["pages"] if "pages" in data else None
+            self._pages = data["page"] if "page" in data else None
             self._publisher = data["publisher"] if "publisher" in data else None
             self._volume = data["volume"] if "volume" in data else None
             self._type = data["type"] if "type" in data else None
