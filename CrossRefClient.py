@@ -7,10 +7,10 @@ class CrossRefClient(object):
     crossref_api_url = "http://api.crossref.org/works/"
 
     def get_publication(self, doi):
-        data = self._resolve_doi(doi)
+        data = self.resolve_doi(doi)
         return Publication(data) if data is not None else None
 
-    def _resolve_doi(self, doi):
+    def resolve_doi(self, doi):
         r = requests.get(self.crossref_api_url + doi)
         return r.json()["message"] \
             if r is not None \
@@ -20,24 +20,28 @@ class CrossRefClient(object):
 
 
 class Publication(object):
+
     def __init__(self, data):
         self._data = data
 
-        if data is not None:
-            self._keywords = data["keywords"] if "keywords" in data else []
-            self._pages = data["page"] if "page" in data else None
-            self._publisher = data["publisher"] if "publisher" in data else None
-            self._volume = data["volume"] if "volume" in data else None
-            self._type = data["type"] if "type" in data else None
-            self._doi = data["DOI"] if "DOI" in data else None
-            self._issn = data["ISSN"][0] if "ISSN" in data and data["ISSN"] else None
-            self._subject = data["subject"] if "subject" in data else []
-            self._title = data["title"][0] if "title" in data and data["title"] else None
-            self._issued = Publication.get_date(data["issued"]["date-parts"][0]) if "issued" in data else None
-            self._publication_venue = data["container-title"] if "container-title" in data else None
-            self._authors = data["author"] if "author" in data and data["author"] else []
-            self._reference_count = data["reference-count"] if "reference-count" in data else None
-            self._issue = data["issue"] if "issue" in data else None
+        if data is None:
+            raise ValueError("input data record is None")
+
+        self._keywords = data["keywords"] if "keywords" in data else []
+        self._pages = data["page"] if "page" in data else None
+        self._publisher = data["publisher"] if "publisher" in data else None
+        self._volume = data["volume"] if "volume" in data else None
+        self._type = data["type"] if "type" in data else None
+        self._doi = data["DOI"] if "DOI" in data else None
+        self._issn = data["ISSN"][0] if "ISSN" in data and data["ISSN"] else None
+        self._subject = data["subject"] if "subject" in data else []
+        self._title = data["title"][0] if "title" in data and data["title"] else None
+        self._issued = Publication.get_date(data["issued"]["date-parts"][0]) if "issued" in data and data["issued"]["date-parts"] else None
+        self._publication_venue = data["container-title"] if "container-title" in data else None
+        self._authors = data["author"] if "author" in data and data["author"] else []
+        self._reference_count = data["reference-count"] if "reference-count" in data else None
+        self._issue = data["issue"] if "issue" in data else None
+        self._url = data["URL"] if "URL" in data else None
 
     @staticmethod
     def get_date(d):
@@ -103,3 +107,7 @@ class Publication(object):
     @property
     def issue(self):
         return self._issue
+
+    @property
+    def url(self):
+        return self._url
